@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Listado de Ubicaciones
+{% endblock title %}
+
+{% block content %}
+
+<div class="d-lg-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1>Listado de Ubicaciones</h1>
+    {% if user.is_authenticated %}
+    <div class="btn-toolbar justify-content-sm-end mb-2 mb-md-0">
+        <div>
+            <div class="btn-group box-select-periodo">
+                <a href="{% url 'blogeventos:ubicacion_create' %}"
+                    class="btn btn-sm btn-outline-primary text-decoration-none">Crear Ubicación</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% for ubicacion in ubicaciones %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h2 class="card-title">{{ ubicacion.nombre}}</h5>
+        <p class="card-text">Dirección: {{ ubicacion.direccion }} - Ciudad: {{ubicacion.ciudad}} - Pais: {{ubicacion.pais}}</p>
+    </div>
+    {% if user.is_authenticated %}
+        <div class="card-footer text-body-secondary justify-content-end d-flex gap-2">
+            <a href="{% url 'blogeventos:ubicacion_edit' ubicacion.id %}" class="btn btn-primary btn-sm">Editar</a>
+            <a href="{% url 'blogeventos:ubicacion_delete' ubicacion.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+         </div>
+    {% endif %}
+</div>
+{% empty %}
+<p>No hay ubicaciones creadas.</p>
+{% endfor %}
+{% endblock content %}

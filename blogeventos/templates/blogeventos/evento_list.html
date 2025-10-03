@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Lista de Eventos
+{% endblock title %}
+
+{% block content %}
+
+<div class="d-lg-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1>Listado de Eventos</h1>
+    {% if user.is_authenticated %}
+    <div class="btn-toolbar justify-content-sm-end mb-2 mb-md-0">
+        <div>
+            <div class="btn-group box-select-periodo">
+                <a href="{% url 'blogeventos:evento_create' %}"
+                    class="btn btn-sm btn-outline-primary text-decoration-none">Crear Evento</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<form action="{% url 'blogeventos:evento_list'%}" method="get" class="input-group mb-5 ">
+    <input type="text" name="busqueda" placeholder="Ingrese el nombre del evento" class="form-control form-control-lg"
+        value="{{ busqueda }}">
+    <input type="submit" value="Buscar" class="btn btn-primary btn-lg px-4 gap-3">
+</form>
+<div class="row">
+{% for evento in eventos %}
+<div class="col-6 col-lg-4 card mb-3">
+    {% if evento.imagen %}
+        <img src="{{ evento.imagen.url }}" class="card-img-top img-fluid" alt="{{ evento.nombre }}">
+    {% endif %}
+    <div class="card-body">
+        <h2 class="card-title">{{ evento.nombre }}</h2>
+        <p class="card-text">{{ evento.resumen }}</p>
+        <p class="card-subtitle mb-3">
+            <strong>Inicia:</strong> {{ evento.fecha_inicio|date:"d/m/Y H:i" }} <br/> 
+            <strong>Finaliza:</strong> {{ evento.fecha_fin|date:"d/m/Y H:i" }}
+        </p>
+        <a href="{% url 'blogeventos:evento_detail' evento.id %}" class="btn btn-primary">Ver Detalles</a>
+    </div>
+</div>
+{% empty %}
+<div class="col-12">
+    <p>No se encontraron eventos.</p>
+</div>
+{% endfor %}
+</div>
+{% endblock content %}

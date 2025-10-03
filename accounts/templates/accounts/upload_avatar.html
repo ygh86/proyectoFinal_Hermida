@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Subir Avatar
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Subir Avatar</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Subir</button>
+    </form>
+</div>
+{% endblock content %}

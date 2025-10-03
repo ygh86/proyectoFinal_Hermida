@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Crear Ubicación
+{% endblock title %}
+
+{% block content %}
+<div class="d-lg-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1>Crear una Ubicación:</h1>
+    <div class="btn-toolbar justify-content-sm-end mb-2 mb-md-0">
+        <div>
+            <div class="btn-group box-select-periodo">
+                <a href="{% url 'blogeventos:ubicacion_list' %}"
+                    class="btn btn-sm btn-outline-primary text-decoration-none">Ver Ubicaciones</a>
+            </div>
+        </div>
+    </div>
+</div>
+<form method="post" class="form-group mb-5">
+    {% csrf_token %}
+    <div class="row">
+    {% for field in form %}
+        <div class="col-md-6 mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <div class="text-danger">
+                    {% for error in field.errors %}
+                        <small>{{ error }}</small>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+</form>
+{% endblock content %}

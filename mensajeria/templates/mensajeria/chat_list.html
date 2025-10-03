@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Mis Chats
+{% endblock title %}
+
+{% block content %}
+
+<div class="d-lg-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1>Listado de Chats</h1>
+</div>
+<div class="row h-100" style="min-height: 50vh;">
+    <div class="col-md-3 border-end">
+        <p>Selecciona un usuario para iniciar un nuevo chat:</p>
+    <!-- Botones para iniciar nuevos chats -->
+        {% for u in usuarios %}
+            {% if u != request.user %}
+                <a href="{% url 'mensajeria:chat_create' u.id %}" class="btn btn-sm btn-outline-secondary mb-2 w-100 justify-content-start d-flex align-items-center gap-2">
+                    <img src="{{ u.profile.imagen_url}}" width="30" height="30" class="img-fluid rounded-circle"> {{ u.username }}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="col-md-9">
+        <div class="list-group" style="max-height: 500px; overflow-y: auto;">
+        {% for chat in chats %}
+            <a href="{% url 'mensajeria:chat_detail' chat.id %}" 
+            class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true"> 
+                <!-- Avatar -->   
+                <img src="{{ chat.otro_usuario.profile.imagen_url }}" width="40" height="40" class="rounded-circle">
+
+                <!-- Detalles del chat -->
+                <div class="d-flex gap-2 w-100 justify-content-between"> 
+                    <div> 
+                        <h2 class="h6 strong mb-0">
+                        {% if chat.usuario_emisor == request.user %}
+                            {{ chat.usuario_receptor.username }}
+                        {% else %}
+                            {{ chat.usuario_emisor.username }}
+                        {% endif %}
+                        </h2>
+                        {% if chat.mensajes.last %}
+                            {% if chat.mensajes.last.usuario_remitente == request.user %}
+                                <small class="text-muted font-monospace">
+                                <!-- Mensaje que envié yo -->
+                                {% if chat.mensajes.last.leido %}
+                                    <small class="text-primary">✓✓</small> <!-- leído por el otro -->
+                                {% else %}
+                                    <small class="text-secondary">✓✓</small> <!-- aún no leído -->
+                                {% endif %}
+                                </small>
+                            {% endif %}
+                            <span class="font-monospace"> {{ chat.mensajes.last.contenido|truncatewords:5 }}</span>
+                        {% else %}
+                            <small class="text-muted font-monospace">(sin mensajes aún)</small>
+                        {% endif %}
+
+                    </div>
+                </div> 
+            </a> 
+        {% empty %}
+            <p>No se encontraron chats.</p>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

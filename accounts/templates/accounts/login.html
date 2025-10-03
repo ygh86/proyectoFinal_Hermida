@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Iniciar Sesión
+{% endblock title %}
+
+{% block content %}
+<div class="d-lg-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1>Iniciar Sesión</h1>
+</div>
+<div class="px-4 py-5 my-5" bis_skin_checked="1">
+    {% if form.errors %}
+        <p style="color:red;">Usuario o contraseña incorrectos.</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Ingresar</button>
+    </form>
+    <p class="mt-5">¿No tienes una cuenta? <a href="{% url 'accounts:registro' %}">Regístrate aquí</a></p>
+</div>
+{% endblock content %}

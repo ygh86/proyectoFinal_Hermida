@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Detalle del Evento
+{% endblock title %}
+
+{% block content %}
+
+<div class="d-lg-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1>{{ evento.nombre }}</h1>
+    <div class="btn-toolbar justify-content-sm-end mb-2 mb-md-0">
+        <div>
+            <div class="btn-group box-select-periodo">
+                <a href="{% url 'blogeventos:evento_list' %}"
+                    class="btn btn-sm btn-outline-primary text-decoration-none">Ver todos los eventos</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+  <div class="row g-0">
+    <div class="col-md-4">
+        {% if evento.imagen %}
+            <img src="{{ evento.imagen.url }}" class="card-img-top img-fluid" alt="{{ evento.nombre }}">
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <p class="card-subtitle mb-3">
+            <strong>Inicia:</strong> {{ evento.fecha_inicio|date:"d/m/Y H:i" }} <br/> 
+            <strong>Finaliza:</strong> {{ evento.fecha_fin|date:"d/m/Y H:i" }}
+        </p>
+        {{ evento.descripcion|safe }}
+        <p class="card-text mt-3"><strong>Organizador:</strong> {{ evento.organizador.username }}</p>
+        <p class="card-text mt-3"><strong>Ubicación:</strong> {{ evento.ubicacion.nombre }}, {{ evento.ubicacion.direccion }}, {{ evento.ubicacion.ciudad }}, {{ evento.ubicacion.pais }}</p>
+      </div>
+    </div>
+  </div>
+  {% if user.is_authenticated %}
+    <div class="card-footer text-body-secondary justify-content-end d-flex gap-2">
+      <a href="{% url 'blogeventos:evento_edit' evento.id %}" class="btn btn-primary btn-sm">Editar</a>
+      <a href="{% url 'blogeventos:evento_delete' evento.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+    </div>
+  {% endif %}
+</div>
+<div class="mb-5"></div>
+{% endblock content %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Chat con 
+{% if chat.usuario_emisor == request.user %}
+    {{ chat.usuario_receptor.username }}
+{% else %}
+    {{ chat.usuario_emisor.username }}
+{% endif %}
+{% endblock title %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1>
+    Chat con <em>
+    {% if chat.usuario_emisor == request.user %}
+        {{ chat.usuario_receptor.username }}
+    {% else %}
+        {{ chat.usuario_emisor.username }}
+    {% endif %}
+    </em>
+    </h1>
+    <div class="btn-toolbar justify-content-sm-end mb-2 mb-md-0">
+        <div>
+            <div class="btn-group box-select-periodo">
+                <a href="{% url 'mensajeria:chat_list' %}"
+                    class="btn btn-sm btn-outline-primary text-decoration-none">Ver todos los chats</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chat-box border p-3 mb-3" style="height:400px; overflow-y:auto;">
+    {% for mensaje in chat.mensajes.all %}
+        {% if mensaje.usuario_remitente == request.user %}
+            <!-- Mensaje propio -->
+            <div class="d-flex justify-content-end mb-2 align-items-end">
+                <div class="bg-primary-subtle p-2 rounded" style="max-width:70%; min-width:20%; position: relative;">
+                    <strong><em>Tú</em></strong>
+                    <div class="font-monospace">{{ mensaje.contenido }}</div>
+                    <div class="d-flex justify-content-end">
+                    <small class="text-muted">{{ mensaje.fecha_enviado|date:"H:i" }}</small>
+                    {% if mensaje.leido %}
+                        <span class="text-primary small ms-2">✓✓</span> <!-- leído por el otro -->
+                    {% else %}
+                        <span class="text-secondary small ms-2">✓✓</span> <!-- aún no leído -->
+                    {% endif %}
+                     </div>
+                </div>
+            </div>
+        {% else %}
+            <!-- Mensaje recibido -->
+            <div class="d-flex justify-content-start mb-2 align-items-start">
+                <img src="{{ mensaje.usuario_remitente.profile.imagen_url }}" width="30" height="30" class="rounded-circle me-2">
+                <div class="bg-secondary-subtle p-2 rounded" style="max-width:70%; min-width:20%;">
+                    <strong><em>{{ mensaje.usuario_remitente.username }}</em></strong>:
+                    <div class="font-monospace">{{ mensaje.contenido }}</div>
+                    <small class="text-muted">{{ mensaje.fecha_enviado|date:"H:i" }}</small>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<h2>Enviar un nuevo mensaje:</h2>
+<!-- Formulario para enviar mensaje -->
+<form method="post" class="mb-3">
+    {% csrf_token %}
+    {{ form.contenido }}
+    <button class="btn btn-primary" type="submit">Enviar</button>
+</form>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    // Espera que cargue todo el DOM
+    document.addEventListener("DOMContentLoaded", function() {
+        var chatBox = document.querySelector(".chat-box");
+        if (chatBox) {
+            chatBox.scrollTop = chatBox.scrollHeight; // Va al último mensaje
+        }
+    });
+</script>
+{% endblock extra_js %}

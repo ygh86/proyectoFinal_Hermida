@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Mi Perfil
+{% endblock title %}
+
+{% block content %}
+<div class="d-lg-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1>Mi Perfil</h1>
+</div>
+<div class="px-4 py-5 my-5">
+  <div class="row">
+    <div class="col-md-3">
+    <!-- Avatar del usuario -->
+      {% if user.profile.imagen %}
+        <img src="{{ user.profile.imagen.url }}" class="img-fluid rounded-circle">
+      {% else %}
+        <img src="{% static 'accounts/img/avatar_default.jpg' %}" class="img-fluid rounded-circle">
+      {% endif %}
+
+    </div>
+    <div class="col-md-9">
+    <!-- Detalles del usuario -->
+      <ul class="list-group">
+        <li class="list-group-item"><b>Usuario:</b> {{ user.username }}</li>
+        <li class="list-group-item"><b>Email:</b> {{ user.email }}</li>
+        <li class="list-group-item"><b>Nombre:</b> {{ user.first_name }}</li>
+        <li class="list-group-item"><b>Apellido:</b> {{ user.last_name }}</li>
+        <li class="list-group-item"><b>Fecha de Registro:</b> {{ user.date_joined|date:"d M Y" }}</li>
+        <li class="list-group-item"><b>Biografía:</b> {{ user.profile.bio }}</li>
+        <li class="list-group-item"><b>Sitio Web:</b> <a href="{{ user.profile.website }}" target="_blank">{{ user.profile.website }}</a></li>
+      </ul>
+      <a href="{% url 'accounts:editar_perfil' %}" class="btn btn-primary mt-3">Editar Perfil</a>
+      <a href="{% url 'accounts:password_change' %}" class="btn btn-secondary mt-3">Cambiar contraseña</a>
+  </div>
+</div>
+{% endblock content %}

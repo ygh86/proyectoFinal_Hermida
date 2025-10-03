@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ titulo }}
+{% endblock title %}
+
+{% block content %}
+<div class="px-4 py-5 my-5 text-center" bis_skin_checked="1" style="background-image: url({% static 'blogeventos/img/bg.jpg' %}); background-position: center; background-size: cover; border-radius: 15px;">
+    <h1 class="display-5 fw-bold text-body-emphasis">{{ titulo }}</h1>
+    <div class="col-lg-6 my-5 mx-auto" bis_skin_checked="1">
+        <p class="lead mb-4">{{ mensaje }}</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center" bis_skin_checked="1">
+            <a href="{% url 'blogeventos:evento_list' %}" class="btn btn-primary px-4">Ver Eventos</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
